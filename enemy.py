@@ -1,5 +1,5 @@
 import pygame
-import settings
+from time import time
 pygame.init()
 
 # The player class that is an image and a rectangle that inhibits platformer-style collision
@@ -17,7 +17,11 @@ class Enemy(pygame.sprite.Sprite):
         self.current_ground = None
         self.air_control_factor = 0.5  # Factor to reduce horizontal movement speed in the air
         self.max_speed = 3  # Maximum horizontal speed
-
+        self.health = 10
+        self.attackpow = 2
+        self.canattack = True
+        self.attack_cooldown = 2
+        self.lasttime = 0
         self.player = player
         self.view = view
         self.jumpview = view #in what proximity the enemy will try to jump to reach player
@@ -74,6 +78,18 @@ class Enemy(pygame.sprite.Sprite):
             self.accy = -15  # Set initial jump velocity
             self.grounded = False
 
+    def attack(self):
+        if self.canattack:
+            self.canattack = False
+            self.lasttime = time()
+            return True
+        else:
+            if time() - self.lasttime > self.attack_cooldown:
+                self.canattack = True
+                return True
+            else:
+                return False
+        return False
     
     '''def search_player(self):
         player_x, player_y = self.player.rect.x, self.player.rect.y
@@ -150,9 +166,12 @@ class Enemy(pygame.sprite.Sprite):
             self.current_ground = None
 
     def draw(self, surface):
-        surface.blit(self.image, self.rect)
-        #pygame.draw.rect(surface, (255, 255, 255), self.rect, 1)
-        self.update()
+        if self.health > 0:
+            surface.blit(self.image, self.rect)
+            #pygame.draw.rect(surface, (255, 255, 255), self.rect, 1)
+            self.update()
+        else:
+            quit()
 
     def set_ground(self, grounds):
         self.grounds = grounds

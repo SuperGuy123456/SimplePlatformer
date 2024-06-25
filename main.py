@@ -49,16 +49,9 @@ player.set_ground(grounds)
 enemy = Enemy(200, 200, settings.enemy, player, 100, 2)
 enemy.set_ground(grounds)
 
-flatgrass = item(0, 0, settings.flatgrass)
-under1 = item(30, 0, settings.under1)
-under2 = item(60, 0, settings.under2)
-fgrassleft = item(0, 30, settings.fgrassleft)
-fgrassright = item(30, 30, settings.fgrassright)
-sidewallleft = item(0, 60, settings.swallleft)
-sidewallright = item(30, 60, settings.swallright)
 
-items = [flatgrass, under1, under2, fgrassleft, fgrassright, sidewallleft, sidewallright]
 hitboxes = False
+player.set_enemies([enemy])
 while run:
     clock.tick(settings.FPS)
     screen.fill((0, 0, 0))
@@ -67,6 +60,7 @@ while run:
     enemy.draw(screen)
     if hitboxes:
         pygame.draw.rect(screen, (255, 255, 255), player.rect, 1)
+        pygame.draw.rect(screen, (255, 255, 255), player.attack_rect, 1)
         pygame.draw.rect(screen, (255, 255, 255), enemy.rect, 1)
         pygame.draw.circle(screen,(150,150,150),enemy.rect.center,enemy.view,1)
         
@@ -75,10 +69,7 @@ while run:
         if hitboxes:
             pygame.draw.rect(screen, (255, 255, 255), ground.rect, 1)
 
-    for item in items:
-        item.draw(screen)
-        if hitboxes:
-            pygame.draw.rect(screen, (255, 255, 255), item.rect, 1)
+ 
 
 
     pygame.display.update()
