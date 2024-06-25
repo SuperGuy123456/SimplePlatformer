@@ -69,7 +69,7 @@ while run:
         pygame.draw.rect(screen, (255, 255, 255), player.rect, 1)
         pygame.draw.rect(screen, (255, 255, 255), enemy.rect, 1)
         pygame.draw.circle(screen,(150,150,150),enemy.rect.center,enemy.view,1)
-        pygame.draw.circle(screen,(0,255,0),enemy.rect.center,enemy.jumpview,1)
+        
     for ground in grounds:
         ground.draw(screen)
         if hitboxes:

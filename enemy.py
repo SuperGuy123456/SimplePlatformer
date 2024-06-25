@@ -68,18 +68,63 @@ class Enemy(pygame.sprite.Sprite):
                 if self.accx > 0:
                     self.accx = 0
 
-    def search_player(self):
-        if abs(self.rect.x - self.player.rect.x) < self.view and abs(self.rect.y - self.player.rect.y) < self.view:
-            direction = self.rect.x - self.player.rect.x
-            if direction > 0:
-                self.movehorizontal(False)
-            else:
-                self.movehorizontal(True)
-            if self.rect.bottom < self.player.rect.bottom and abs(self.rect.y - self.player.rect.y) < self.jumpview:
-                self.movevertical()
-                print("jumping")
+
+    def jump(self):
+        if self.grounded:
+            self.accy = -15  # Set initial jump velocity
+            self.grounded = False
+
+    
+    '''def search_player(self):
+        player_x, player_y = self.player.rect.x, self.player.rect.y
+
+        # Check if player is within view range
+        if abs(self.rect.x - player_x) < self.view and abs(self.rect.y - player_y) < self.view:
+            # Adjust horizontal movement
+            if self.rect.x < player_x:
+                self.movehorizontal(True)  # Move right
+            elif self.rect.x > player_x:
+                self.movehorizontal(False)  # Move left
+
+            # Check if enemy should jump to reach player
+            print(self.rect.y," vs ", player_y)
+            if self.rect.y > player_y and abs(self.rect.y - player_y) < self.jumpview:
+                self.jump()
+                print("jumping")  # Debug statement to verify if this branch is reached
+
             return True
+
+        return False'''
+    def search_player(self):
+        player_x, player_y = self.player.rect.x, self.player.rect.y
+        player_speed = self.player.speed  # Assuming player has a speed attribute
+
+        # Check if player is within view range
+        if abs(self.rect.x - player_x) < self.view and abs(self.rect.y - player_y) < self.view:
+            # Predict player's next position
+            predicted_player_x = player_x + player_speed * 5  # Predict 5 frames ahead (adjust as needed)
+            predicted_player_y = player_y  # For horizontal movement prediction
+
+            # Adjust horizontal movement based on predicted position
+            if self.rect.x < predicted_player_x:
+                self.movehorizontal(True)  # Move right
+            elif self.rect.x > predicted_player_x:
+                self.movehorizontal(False)  # Move left
+
+            # Check if enemy should jump to reach predicted player position
+            if self.rect.bottom < predicted_player_y and abs(self.rect.y - predicted_player_y) < self.jumpview:
+                self.jump()
+                print("jumping")  # Debug statement to verify if this branch is reached
+            elif self.rect.y > player_y and abs(self.rect.y - player_y) < self.jumpview:
+                self.jump()
+                print("jumping")  # Debug statement to verify if this branch is reached
+            return True
+
         return False
+
+
+
+
 
     def handle_horizontal_collisions(self):
         for ground in self.grounds:
