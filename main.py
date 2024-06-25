@@ -16,7 +16,7 @@ groupedrects = []
 tile_size = 30
 map_width = 21
 map_height = 16
-
+items = []
 
 # Ensure the map size is correct
 if len(settings.map) != map_width * map_height:
@@ -41,6 +41,8 @@ for index, thing in enumerate(settings.map):
         grounds.append(Ground(x, y, settings.swallleft, 1.0))
     elif thing == 7:
         grounds.append(Ground(x, y, settings.swallright, 1.0))
+    elif thing == 8:
+        items.append(item(x, y, settings.sign))
 
 
 player = Player(100, 100)
@@ -68,6 +70,9 @@ while run:
         ground.draw(screen)
         if hitboxes:
             pygame.draw.rect(screen, (255, 255, 255), ground.rect, 1)
+
+    for item in items:
+        item.draw(screen)
 
  
 

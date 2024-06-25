@@ -21,7 +21,7 @@ map = [
 7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,
 7,0,0,0,0,0,0,0,0,0,4,5,0,0,0,4,1,1,1,1,3,
 7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,3,3,3,3,3,
-7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,3,3,3,3,3,
+7,0,0,0,0,0,0,0,0,0,0,0,8,0,0,6,3,3,3,3,3,
 3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,3,
 2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,3,
 3,3,2,3,3,3,3,3,3,2,3,3,3,2,3,3,3,3,3,3,3
@@ -64,9 +64,9 @@ enemy = pygame.transform.scale(enemy, (17 * 2, 23 * 2))
 
 #normal sign 13x14
 
-sign = pygame.image.load('assets/earth.png')
+sign = pygame.image.load('assets/decor.png')
 sign.set_colorkey((255, 255, 255))
-sign = sign.subsurface(pygame.Rect(0, 0, 13, 14))
+sign = sign.subsurface(pygame.Rect(0, 0, 15, 15))
 sign = pygame.transform.scale(sign, (13 * 2, 14 * 2))
 
 #Ground 15x15
