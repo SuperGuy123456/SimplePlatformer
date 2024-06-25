@@ -12,9 +12,13 @@ run = True
 clock = pygame.time.Clock()
 
 grounds = []
+groupedrects = []
 tile_size = 30
 map_width = 21
 map_height = 16
+lasttile = 0
+reptiles = 1
+current_rect = None
 
 # Ensure the map size is correct
 if len(settings.map) != map_width * map_height:
@@ -23,23 +27,38 @@ if len(settings.map) != map_width * map_height:
 for index, thing in enumerate(settings.map):
     x = (index % map_width) * tile_size
     y = (index // map_width) * tile_size
-    print((x, y))  # Debugging output
     if thing == 0:
         continue
     elif thing == 1:
-        grounds.append(Ground(x, y, settings.flatgrass, 0.5))
+        grounds.append(Ground(x, y, settings.flatgrass, 1.0))
     elif thing == 2:
-        grounds.append(Ground(x, y, settings.under1, 0.5))
+        grounds.append(Ground(x, y, settings.under1, 1.0))
     elif thing == 3:
-        grounds.append(Ground(x, y, settings.under2, 0.5))
+        grounds.append(Ground(x, y, settings.under2, 1.0))
     elif thing == 4:
-        grounds.append(Ground(x, y, settings.fgrassleft, 0.5))
+        grounds.append(Ground(x, y, settings.fgrassleft, 1.0))
     elif thing == 5:
-        grounds.append(Ground(x, y, settings.fgrassright, 0.5))
+        grounds.append(Ground(x, y, settings.fgrassright, 1.0))
     elif thing == 6:
-        grounds.append(Ground(x, y, settings.swallleft, 0.5))
+        grounds.append(Ground(x, y, settings.swallleft, 1.0))
     elif thing == 7:
-        grounds.append(Ground(x, y, settings.swallright, 0.5))
+        grounds.append(Ground(x, y, settings.swallright, 1.0))
+
+    if current_rect is None:
+        current_rect = pygame.Rect(x, y, tile_size, tile_size)
+        lasttile = thing
+        reptiles = 1
+    elif lasttile == thing and thing != 0 and (index % map_width != 0):
+        reptiles += 1
+        current_rect.width = reptiles * tile_size
+    else:
+        groupedrects.append(current_rect)
+        current_rect = pygame.Rect(x, y, tile_size, tile_size)
+        lasttile = thing
+        reptiles = 1
+
+if current_rect is not None:
+    groupedrects.append(current_rect)
 
 player = Player(100, 100)
 player.set_ground(grounds)
@@ -68,9 +87,12 @@ while run:
 
     for item in items:
         item.draw(screen)
-    
+
+    for rect in groupedrects:
+        pygame.draw.rect(screen, (255, 0, 0), rect,1)
+
     pygame.display.update()
-    
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
