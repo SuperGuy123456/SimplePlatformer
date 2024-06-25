@@ -9,12 +9,22 @@ AUTHOR = "Manomay Tyagi"
 #testmap
 
 map = [
- , , , , , , , , , , , , , , , , , , , , ,
- , , , , , , , , , , , , , , , , , , , , ,
- , , , , , , , , , , , , , , , , , , , , ,
- , , , , , , , , , , , , , , , , , , , , ,
- , , , , , , , , , , , , , , , , , , , , ,
- , , , , , , , , , , , , , , , , , , , , ,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,4,5,0,0,0,4,1,1,1,1,1,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,3,3,3,3,3,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,3,3,3,3,3,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,3,
+2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2,3,
+3,3,2,3,3,3,3,3,3,2,3,3,3,2,3,3,3,3,3,3,3
 ]
 
 #images clipping images from sprite sheet
@@ -57,17 +67,38 @@ sign = pygame.transform.scale(sign, (13 * 2, 14 * 2))
 
 #Ground 15x15
 
-#Flat grass
+#Flat grass 0
 flatgrass = pygame.image.load('assets/earth.png')
 flatgrass.set_colorkey((255, 255, 255))
 flatgrass = flatgrass.subsurface(pygame.Rect(13, 0, 15, 15))
 flatgrass = pygame.transform.scale(flatgrass, (15 * 2, 15 * 2))
-#under flatgrass
-
-#flatgrassleft
-
-#flatgrassright
-
-#side wallleft
-
-#side Wall right
+#under flatgrass 1
+under1 = pygame.image.load('assets/earth.png')
+under1.set_colorkey((255, 255, 255))
+under1 = under1.subsurface(pygame.Rect(28, 0, 15, 15))
+under1 = pygame.transform.scale(under1, (15 * 2, 15 * 2))
+#underflatgrass_other 2
+under2 = pygame.image.load('assets/earth.png')
+under2.set_colorkey((255, 255, 255))
+under2 = under2.subsurface(pygame.Rect(15, 30, 15, 15))
+under2 = pygame.transform.scale(under2, (15 * 2, 15 * 2))
+#flatgrassleft 3
+fgrassleft = pygame.image.load('assets/earth.png')
+fgrassleft.set_colorkey((255, 255, 255))
+fgrassleft = fgrassleft.subsurface(pygame.Rect(0, 15, 15, 15))
+fgrassleft = pygame.transform.scale(fgrassleft, (15 * 2, 15 * 2))
+#flatgrassright 4
+fgrassright = pygame.image.load('assets/earth.png')
+fgrassright.set_colorkey((255, 255, 255))
+fgrassright = fgrassright.subsurface(pygame.Rect(15, 15, 15, 15))
+fgrassright = pygame.transform.scale(fgrassright, (15 * 2, 15 * 2))
+#side wallleft 5
+swallleft = pygame.image.load('assets/earth.png')
+swallleft.set_colorkey((255, 255, 255))
+swallleft = swallleft.subsurface(pygame.Rect(30, 15, 15, 15))
+swallleft = pygame.transform.scale(swallleft, (15 * 2, 15 * 2))
+#side Wall right 6
+swallright = pygame.image.load('assets/earth.png')
+swallright.set_colorkey((255, 255, 255))
+swallright = swallright.subsurface(pygame.Rect(0, 30, 15, 15))
+swallright = pygame.transform.scale(swallright, (15 * 2, 15 * 2))
