@@ -46,7 +46,7 @@ for index, thing in enumerate(settings.map):
 player = Player(100, 100)
 player.set_ground(grounds)
 
-enemy = Enemy(200, 200)
+enemy = Enemy(200, 200, settings.enemy, player, 100, 2)
 enemy.set_ground(grounds)
 
 flatgrass = item(0, 0, settings.flatgrass)
@@ -68,6 +68,8 @@ while run:
     if hitboxes:
         pygame.draw.rect(screen, (255, 255, 255), player.rect, 1)
         pygame.draw.rect(screen, (255, 255, 255), enemy.rect, 1)
+        pygame.draw.circle(screen,(150,150,150),enemy.rect.center,enemy.view,1)
+        pygame.draw.circle(screen,(0,255,0),enemy.rect.center,enemy.jumpview,1)
     for ground in grounds:
         ground.draw(screen)
         if hitboxes:

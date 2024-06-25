@@ -4,30 +4,40 @@ pygame.init()
 
 # The player class that is an image and a rectangle that inhibits platformer-style collision
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y,image, player, view, speed = 1):
         super().__init__()
-        self.image = settings.enemy
+        self.image = image
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.speed = 1
+        self.speed = speed
         self.accx = 0
         self.accy = 0
         self.grounded = False
         self.current_ground = None
         self.air_control_factor = 0.5  # Factor to reduce horizontal movement speed in the air
-        self.max_speed = 5  # Maximum horizontal speed
+        self.max_speed = 3  # Maximum horizontal speed
 
-    def update(self):
-        '''keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.accx -= self.speed if self.grounded else self.speed * self.air_control_factor
-        if keys[pygame.K_RIGHT]:
+        self.player = player
+        self.view = view
+        self.jumpview = view #in what proximity the enemy will try to jump to reach player
+
+
+    def movehorizontal(self, right):
+        if right:
             self.accx += self.speed if self.grounded else self.speed * self.air_control_factor
-        if keys[pygame.K_UP] and self.grounded:
-            self.accy -= 15
-            self.grounded = False'''
+        else:
+            self.accx -= self.speed if self.grounded else self.speed * self.air_control_factor
 
+
+    def movevertical(self):
+        if self.grounded:
+            self.accy = -15
+            self.grounded = False
+        self.rect.y += self.accy
+        self.handle_vertical_collisions()
+    def update(self):
+        self.search_player()
         # Clamp horizontal speed
         if self.accx > self.max_speed:
             self.accx = self.max_speed
@@ -57,6 +67,19 @@ class Enemy(pygame.sprite.Sprite):
                 self.accx += friction
                 if self.accx > 0:
                     self.accx = 0
+
+    def search_player(self):
+        if abs(self.rect.x - self.player.rect.x) < self.view and abs(self.rect.y - self.player.rect.y) < self.view:
+            direction = self.rect.x - self.player.rect.x
+            if direction > 0:
+                self.movehorizontal(False)
+            else:
+                self.movehorizontal(True)
+            if self.rect.bottom < self.player.rect.bottom and abs(self.rect.y - self.player.rect.y) < self.jumpview:
+                self.movevertical()
+                print("jumping")
+            return True
+        return False
 
     def handle_horizontal_collisions(self):
         for ground in self.grounds:
