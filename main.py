@@ -61,7 +61,7 @@ if current_rect is not None:
     groupedrects.append(current_rect)
 
 player = Player(100, 100)
-player.set_ground(grounds)
+player.set_ground(groupedrects)
 
 enemy = Enemy(200, 200)
 enemy.set_ground(grounds)
