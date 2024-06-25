@@ -6,7 +6,7 @@ FPS = 60
 TITLE = "Platformer"
 AUTHOR = "Manomay Tyagi"
 
-#images
+#images clipping images from sprite sheet
 
 #player 17x23
 
