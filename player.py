@@ -62,9 +62,9 @@ class Player(pygame.sprite.Sprite):
         for ground in self.grounds:
             if self.rect.colliderect(ground):
                 if self.accx > 0:  # Moving right
-                    self.rect.right = ground.left
+                    self.rect.right = ground.rect.left
                 elif self.accx < 0:  # Moving left
-                    self.rect.left = ground.right
+                    self.rect.left = ground.rect.right
                 self.accx = 0  # Stop horizontal movement on collision
 
     def handle_vertical_collisions(self):
@@ -72,11 +72,11 @@ class Player(pygame.sprite.Sprite):
         for ground in self.grounds:
             if self.rect.colliderect(ground):
                 if self.accy > 0:  # Falling
-                    self.rect.bottom = ground.top
+                    self.rect.bottom = ground.rect.top
                     self.grounded = True
                     self.current_ground = ground
                 elif self.accy < 0:  # Jumping
-                    self.rect.top = ground.bottom
+                    self.rect.top = ground.rect.bottom
                 self.accy = 0  # Stop vertical movement on collision
         if not self.grounded:
             self.current_ground = None

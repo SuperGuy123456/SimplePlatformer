@@ -16,9 +16,7 @@ groupedrects = []
 tile_size = 30
 map_width = 21
 map_height = 16
-lasttile = 0
-reptiles = 1
-current_rect = None
+
 
 # Ensure the map size is correct
 if len(settings.map) != map_width * map_height:
@@ -44,24 +42,9 @@ for index, thing in enumerate(settings.map):
     elif thing == 7:
         grounds.append(Ground(x, y, settings.swallright, 1.0))
 
-    if current_rect is None:
-        current_rect = pygame.Rect(x, y, tile_size, tile_size)
-        lasttile = thing
-        reptiles = 1
-    elif lasttile == thing and thing != 0 and (index % map_width != 0):
-        reptiles += 1
-        current_rect.width = reptiles * tile_size
-    else:
-        groupedrects.append(current_rect)
-        current_rect = pygame.Rect(x, y, tile_size, tile_size)
-        lasttile = thing
-        reptiles = 1
-
-if current_rect is not None:
-    groupedrects.append(current_rect)
 
 player = Player(100, 100)
-player.set_ground(groupedrects)
+player.set_ground(grounds)
 
 enemy = Enemy(200, 200)
 enemy.set_ground(grounds)
@@ -75,26 +58,40 @@ sidewallleft = item(0, 60, settings.swallleft)
 sidewallright = item(30, 60, settings.swallright)
 
 items = [flatgrass, under1, under2, fgrassleft, fgrassright, sidewallleft, sidewallright]
-
+hitboxes = False
 while run:
     clock.tick(settings.FPS)
     screen.fill((0, 0, 0))
     screen.blit(settings.sky, (0, 0))
     player.draw(screen)
     enemy.draw(screen)
+    if hitboxes:
+        pygame.draw.rect(screen, (255, 255, 255), player.rect, 1)
+        pygame.draw.rect(screen, (255, 255, 255), enemy.rect, 1)
     for ground in grounds:
         ground.draw(screen)
+        if hitboxes:
+            pygame.draw.rect(screen, (255, 255, 255), ground.rect, 1)
 
     for item in items:
         item.draw(screen)
+        if hitboxes:
+            pygame.draw.rect(screen, (255, 255, 255), item.rect, 1)
 
-    for rect in groupedrects:
-        pygame.draw.rect(screen, (255, 0, 0), rect,1)
 
     pygame.display.update()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                run = False
+            elif event.key == pygame.K_h:
+                if hitboxes:
+                    hitboxes = False
+                else:
+                    hitboxes = True
 
 pygame.quit()
