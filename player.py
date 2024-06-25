@@ -83,7 +83,7 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, surface):
         surface.blit(self.image, self.rect)
-        pygame.draw.rect(surface, (255, 255, 255), self.rect, 1)
+        #pygame.draw.rect(surface, (255, 255, 255), self.rect, 1)
         self.update()
 
     def set_ground(self, grounds):

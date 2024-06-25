@@ -10,9 +10,27 @@ AUTHOR = "Manomay Tyagi"
 
 #player 17x23
 
-player = pygame.image.load('assets/characters.png') 
-player = player.set_colorkey((255,255,255))
-player = pygame.Surface.set_clip(player,(0,0,17,23))
-player = pygame.transform.scale(player,(17*2,23*2))
+player = pygame.image.load('assets/characters.png')
+
+# Set color key
+player.set_colorkey((255, 255, 255))
+
+# Set the clip area
+player = player.subsurface(pygame.Rect(0, 0, 17, 23))
+
+# Scale the surface
+player = pygame.transform.scale(player, (17 * 2, 23 * 2))
 
 #enemy 18x23
+
+
+enemy = pygame.image.load('assets/characters.png')
+
+# Set color key
+enemy.set_colorkey((255, 255, 255))
+
+# Set the clip area
+enemy = enemy.subsurface(pygame.Rect(17, 0, 18, 23))
+
+# Scale the surface
+enemy = pygame.transform.scale(enemy, (17 * 2, 23 * 2))
