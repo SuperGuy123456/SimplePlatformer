@@ -11,9 +11,33 @@ screen = pygame.display.set_mode((settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT)
 run = True
 clock = pygame.time.Clock()
 
-ground = Ground(0, 400, "normalground",(settings.WINDOW_WIDTH, 100), 0.5)
-ground2 = Ground(300, 300, "normalground",(settings.WINDOW_WIDTH, 100), 0.5)
-grounds = [ground,ground2]
+grounds = []
+x = 0
+y = 0
+for thing in settings.map:
+    print((x,y))
+    if thing == 0:
+        pass
+    if thing == 1:
+        grounds.append(Ground(x, y, settings.flatgrass, 0.5))
+    if thing == 2:
+        grounds.append(Ground(x, y, settings.under1, 0.5))
+    if thing == 3:
+        grounds.append(Ground(x, y, settings.under2, 0.5))
+    if thing == 4:
+        grounds.append(Ground(x, y, settings.fgrassleft, 0.5))
+    if thing == 5:
+        grounds.append(Ground(x, y, settings.fgrassright, 0.5))
+    if thing == 6:
+        grounds.append(Ground(x, y, settings.swallleft, 0.5))
+    if thing == 7:
+        grounds.append(Ground(x, y, settings.swallright, 0.5))
+
+    if x == 630:
+        x = 0
+        y += 30
+    else:
+        x += 30
 
 player = Player(100,100)
 player.set_ground(grounds)
@@ -34,6 +58,7 @@ items = [flatgrass,under1,under2,fgrassleft,fgrassright,sidewallleft,sidewallrig
 while run:
     clock.tick(settings.FPS)
     screen.fill((0,0,0))
+    screen.blit(settings.sky,(0,0))
     player.draw(screen)
     enemy.draw(screen)
     for i in grounds:
