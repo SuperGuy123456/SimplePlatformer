@@ -48,7 +48,7 @@ class Player(pygame.sprite.Sprite):
         if self.canattack:
             self.canattack = False
             self.lasttime = time()
-            print("attacked")
+        
             self.checkifhit()
         else:
             if time() - self.lasttime > self.attack_cooldown:
@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         for enemy in self.enemies:
             if self.attack_rect.colliderect(enemy.rect):
                 enemy.health -= self.attackpow
-                print("enemy health: ", enemy.health)
+                
         items = []
         for item in self.items:
             if self.attack_rect.colliderect(item.rect):
@@ -161,7 +161,6 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.highlight()
-        print(self.active_effect)
         self.health_rect = pygame.Rect(5, 0, self.health * 2, 25)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -225,7 +224,6 @@ class Player(pygame.sprite.Sprite):
                 if enemy.attack():
                     self.health -= enemy.attackpow
         if self.health <= 0:
-            print("ded")
             quit()
 
         if self.active_effect == "health":

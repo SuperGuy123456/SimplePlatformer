@@ -1,11 +1,13 @@
 import pygame
 import settings
+from random import choice
 from player import Player
 from ground import Ground
 from enemy import Enemy
 from specialitems import decor
 from item import Item
 from flatimg import Flat
+from trader import Trader
 
 pygame.init()
 screen = pygame.display.set_mode((settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT))
@@ -17,6 +19,7 @@ grounds = []
 enemies = []
 items = []
 flats = []
+traders = []
 tile_size = 30
 map_width = 21
 map_height = 16
@@ -68,6 +71,8 @@ for index, thing in enumerate(settings.map):
         player = Player(x,y)
     elif thing == 15:
         enemies.append(Enemy(x,y,settings.enemy, 100,1))
+    elif thing == 4:
+        traders.append(Trader(x,y, choice(settings.trader_types)))
 
     elif thing == 32:
         items.append(Item(x,y,settings.coin,"coin"))
@@ -94,6 +99,10 @@ for enemy in enemies:
 for item in items:
     item.set_ground(grounds)
 
+for trader in traders:
+    trader.set_ground(grounds)
+    trader.set_player(player)
+
 hitboxes = False
 
 while run:
@@ -108,6 +117,8 @@ while run:
         if hitboxes:
             pygame.draw.rect(screen, (255, 255, 255), enemy.rect, 1)
             pygame.draw.circle(screen,(150,150,150),enemy.rect.center,enemy.view,1)
+
+    
     for item in items:
         item.draw(screen)
         if hitboxes:
@@ -126,6 +137,11 @@ while run:
         if hitboxes:
             if decor.makerect:
                 pygame.draw.rect(screen, (255, 255, 255), decor.rect, 1)
+
+    for trader in traders:
+        trader.draw(screen)
+        if hitboxes:
+            pygame.draw.rect(screen, (255, 255, 255), trader.rect, 1)
 
  
     player.draw(screen)
@@ -146,5 +162,7 @@ while run:
                     hitboxes = True
 
         player.check_use(event)
+        for trader in traders:
+            trader.checkforsale(event)
 
 pygame.quit()

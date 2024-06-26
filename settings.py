@@ -16,7 +16,7 @@ map = [
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0,0,9,
 8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,
-13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,
+13,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,9,
 13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,
 13,0,0,0,0,0,0,0,0,0,21,22,0,0,0,22,28,26,28,20,9,
 13,0,14,0,0,0,0,0,0,0,7,8,0,0,0,7,1,1,1,1,3,
@@ -59,6 +59,20 @@ enemy = enemy.subsurface(pygame.Rect(17, 0, 18, 23))
 
 # Scale the surface
 enemy = pygame.transform.scale(enemy, (17 * 2, 23 * 2))
+
+#trader 18x23
+trader_types = ["Common Trader","Rare Trader","Epic Trader"]
+
+trader = pygame.image.load('assets/characters.png')
+trader.set_colorkey((255, 255, 255))
+trader = trader.subsurface(pygame.Rect(35, 0, 18, 23))
+trader = pygame.transform.scale(trader, (18 * 2, 23 * 2))
+
+# ... 11x6
+interact = pygame.image.load('assets/effects.png')
+interact.set_colorkey((255, 255, 255))
+interact = interact.subsurface(pygame.Rect(0, 0, 11, 6))
+interact = pygame.transform.scale(interact, (11 * 2, 6 * 2))
 
 #items 15x15
 
