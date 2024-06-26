@@ -74,7 +74,7 @@ class Player(pygame.sprite.Sprite):
         for decor in self.decors:
             try:
                 if self.attack_rect.colliderect(decor.rect) and decor.image == settings.crate:
-                    decor.crate()
+                    decor.crate(self)
                 decors.append(decor)
             except:
                 decors.append(decor)
