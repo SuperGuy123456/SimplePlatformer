@@ -4,7 +4,7 @@ pygame.init()
 
 # The player class that is an image and a rectangle that inhibits platformer-style collision
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y,image, player, view, speed = 1):
+    def __init__(self, x, y,image, view, speed = 1):
         super().__init__()
         self.image = image
         self.rect = self.image.get_rect()
@@ -22,10 +22,13 @@ class Enemy(pygame.sprite.Sprite):
         self.canattack = True
         self.attack_cooldown = 2
         self.lasttime = 0
-        self.player = player
+        self.player = None
         self.view = view
         self.jumpview = view #in what proximity the enemy will try to jump to reach player
 
+
+    def set_player(self,player):
+        self.player = player
 
     def movehorizontal(self, right):
         if right:

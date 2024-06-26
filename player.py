@@ -1,6 +1,8 @@
 import pygame
 import settings
+from inventory import Inventory
 from time import time
+from HUD import HUD
 pygame.init()
 
 # The player class that is an image and a rectangle that inhibits platformer-style collision
@@ -8,7 +10,10 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         self.image = settings.player
-        self.outline_rect = pygame.Rect(0,0,200+5,25)
+        self.outline_rect = pygame.Rect(0, 0, 200 + 5, 25)
+        self.leftimage = pygame.transform.flip(self.image, True, False)
+        self.index = 0
+        self.images = [self.image, self.leftimage]
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -26,7 +31,18 @@ class Player(pygame.sprite.Sprite):
         self.attack_cooldown = 1
         self.lasttime = time()
         self.canattack = True
-        self.direction = True #right = True, left = False
+        self.direction = True  # right = True, left = False
+        self.inventory = Inventory(5)
+        self.active_effect = None
+        self.effect_duration = 0
+        self.base_health = 100
+        self.base_attackpow = 2
+        self.base_speed = 1
+        self.base_max_speed = 5
+        self.base_attack_cooldown = 1
+        self.effect_start_time = 0
+        self.coins = 0
+        self.hud = HUD(self)
 
     def attack(self):
         if self.canattack:
@@ -34,21 +50,69 @@ class Player(pygame.sprite.Sprite):
             self.lasttime = time()
             print("attacked")
             self.checkifhit()
-
         else:
             if time() - self.lasttime > self.attack_cooldown:
                 self.canattack = True
                 return 0
             else:
                 return 0
-            
+
     def checkifhit(self):
         for enemy in self.enemies:
             if self.attack_rect.colliderect(enemy.rect):
                 enemy.health -= self.attackpow
                 print("enemy health: ", enemy.health)
+        items = []
+        for item in self.items:
+            if self.attack_rect.colliderect(item.rect):
+                item.picked(self)
+            else:
+                items.append(item)
+        self.items = items
+
+    def use(self):
+        if self.active_effect:
+            return  # Only one effect can be active at a time
+
+        item_used = False
+        for i, (item, pos) in enumerate(self.inventory.blits):
+            if i == self.inventory.heighlightindex:
+                if item.type == "health":
+                    self.health += 20
+                    self.active_effect = "health"
+                    self.effect_duration = 10
+                    self.effect_start_time = time()
+                    item_used = True
+
+                if item.type == "strength":
+                    self.attackpow += 1
+                    self.active_effect = "strength"
+                    self.effect_duration = 10
+                    self.effect_start_time = time()
+                    item_used = True
+                
+                if item.type == "speed":
+                    self.speed += 1
+                    self.max_speed += 2
+                    self.attack_cooldown -= 0.5
+                    self.active_effect = "speed"
+                    self.effect_duration = 10
+                    self.effect_start_time = time()
+                    item_used = True
+
+                if item.type == "coin":
+                    self.coins += 1
+                    item_used = True
+                
+
+        if item_used:
+            del self.inventory.blits[self.inventory.heighlightindex]
+            self.inventory.imagex -= 30
+            self.inventory.set_inv(self.inventory.blits, self.inventory.imagex)
+
     def update(self):
-        self.health_rect = pygame.Rect(5, 0, self.health*2, 25)
+        print(self.active_effect)
+        self.health_rect = pygame.Rect(5, 0, self.health * 2, 25)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.accx -= self.speed if self.grounded else self.speed * self.air_control_factor
@@ -61,6 +125,16 @@ class Player(pygame.sprite.Sprite):
             self.grounded = False
         if keys[pygame.K_a]:
             self.attack()
+        if keys[pygame.K_1]:
+            self.inventory.select(0)
+        if keys[pygame.K_2]:
+            self.inventory.select(1)
+        if keys[pygame.K_3]:
+            self.inventory.select(2)
+        if keys[pygame.K_4]:
+            self.inventory.select(3)
+        if keys[pygame.K_5]:
+            self.inventory.select(4)
         # Clamp horizontal speed
         if self.accx > self.max_speed:
             self.accx = self.max_speed
@@ -100,11 +174,36 @@ class Player(pygame.sprite.Sprite):
             if self.rect.colliderect(enemy):
                 if enemy.attack():
                     self.health -= enemy.attackpow
-                    #print("lost health:", enemy.attackpow)
         if self.health <= 0:
             print("ded")
             quit()
-        #print("health: ", self.health)
+
+        if self.active_effect == "health":
+            if time() - self.effect_start_time <= self.effect_duration:
+                self.health += 5 * (1 / settings.FPS)
+                if self.health > self.base_health:
+                    self.health = self.base_health
+            else:
+                self.active_effect = None
+        elif self.active_effect == "strength":
+            if time() - self.effect_start_time <= self.effect_duration:
+                pass
+            else:
+                self.active_effect = None
+                self.attackpow = self.base_attackpow
+        elif self.active_effect == "speed":
+            if time() - self.effect_start_time <= self.effect_duration:
+                pass
+            else:
+                self.active_effect = None
+                self.speed = self.base_speed
+                self.max_speed = self.base_max_speed
+                self.attack_cooldown = self.base_attack_cooldown
+
+    def check_use(self, e):
+        if e.type == pygame.KEYDOWN:
+            if e.key == pygame.K_e:
+                self.use()
 
     def handle_horizontal_collisions(self):
         for ground in self.grounds:
@@ -130,9 +229,14 @@ class Player(pygame.sprite.Sprite):
             self.current_ground = None
 
     def draw(self, surface):
-        surface.blit(self.image, self.rect)
+        if self.direction:
+            surface.blit(self.images[0], self.rect)
+        else:
+            surface.blit(self.images[1], self.rect)
         pygame.draw.rect(surface, (255, 0, 0), self.health_rect)
-        pygame.draw.rect(surface, (255, 255, 255), self.outline_rect,5)
+        pygame.draw.rect(surface, (255, 255, 255), self.outline_rect, 5)
+        self.inventory.draw(surface)
+        self.hud.draw(surface)
         self.update()
 
     def set_ground(self, grounds):
@@ -140,3 +244,6 @@ class Player(pygame.sprite.Sprite):
 
     def set_enemies(self, enemies):
         self.enemies = enemies
+
+    def set_items(self, items):
+        self.items = items

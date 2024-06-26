@@ -21,14 +21,14 @@ class Button():
             return False
 
 run = True
-button1 = Button(0, 0, pygame.image.load("assets/decor.png"))
+upload = Button(0, 0, pygame.image.load("assets/decor.png"))
 while run:
     screen.fill((0, 0, 0))
-    button1.draw()
+    upload.draw()
     pygame.display.update()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        if button1.update(event):
-            
+        if upload.update(event):
+            pass
 pygame.quit()
