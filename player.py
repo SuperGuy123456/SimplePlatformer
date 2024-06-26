@@ -103,12 +103,21 @@ class Player(pygame.sprite.Sprite):
                 if item.type == "coin":
                     self.coins += 1
                     item_used = True
-                
 
-        if item_used:
-            del self.inventory.blits[self.inventory.heighlightindex]
-            self.inventory.imagex -= 30
-            self.inventory.set_inv(self.inventory.blits, self.inventory.imagex)
+                if item_used:
+                    # Remove the used item from the inventory
+                    self.inventory.blits.pop(i)
+
+                    # Adjust the inventory slots visually with y-coordinate set to 450
+                    self.inventory.blits = [(item, (index * 30, 450)) for index, (item, pos) in enumerate(self.inventory.blits)]
+                    self.inventory.imagex -= 30
+                    self.inventory.set_inv(self.inventory.blits, self.inventory.imagex)
+
+                    # Adjust the highlight index
+                    self.inventory.heighlightindex = max(0, self.inventory.heighlightindex - 1)
+                    break
+
+
 
     def update(self):
         print(self.active_effect)
