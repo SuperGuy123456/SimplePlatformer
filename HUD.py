@@ -1,4 +1,5 @@
 import pygame
+from time import time
 pygame.init()
 
 class HUD(pygame.sprite.Sprite):
@@ -9,7 +10,7 @@ class HUD(pygame.sprite.Sprite):
     
     def draw(self,screen):
         if self.player.active_effect != None:
-            text = self.font.render("Effect: "+self.player.active_effect+", Duration: "+str(self.player.effect_duration), True, (255,255,255))
+            text = self.font.render("Effect: "+self.player.active_effect+", Duration: "+str(round(self.player.effect_duration - (time() - self.player.effect_start_time))), True, (255,255,255))
             screen.blit(text, (0,25))
         else:
             text = self.font.render("Effect: None", True, (255,255,255))

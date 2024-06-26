@@ -98,7 +98,6 @@ while run:
     screen.fill((0, 0, 0))
     screen.blit(settings.sky, (0, 0))
     items = player.items
-    decors = player.decors
     for enemy in enemies:
         enemy.draw(screen)
         if hitboxes:
