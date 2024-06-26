@@ -25,6 +25,7 @@ class Enemy(pygame.sprite.Sprite):
         self.player = None
         self.view = view
         self.jumpview = view #in what proximity the enemy will try to jump to reach player
+        self.highlight = False
 
 
     def set_player(self,player):
@@ -171,10 +172,17 @@ class Enemy(pygame.sprite.Sprite):
     def draw(self, surface):
         if self.health > 0:
             surface.blit(self.image, self.rect)
+            if self.highlight:
+                pygame.draw.rect(surface, (255, 255, 255), self.rect, 1)
+                self.highlight = False
             #pygame.draw.rect(surface, (255, 255, 255), self.rect, 1)
             self.update()
         else:
             quit()
 
+
     def set_ground(self, grounds):
         self.grounds = grounds
+
+    def highlight_on(self):
+        self.highlight = True

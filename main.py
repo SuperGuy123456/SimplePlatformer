@@ -5,6 +5,7 @@ from ground import Ground
 from enemy import Enemy
 from specialitems import decor
 from item import Item
+from flatimg import Flat
 
 pygame.init()
 screen = pygame.display.set_mode((settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT))
@@ -15,6 +16,7 @@ clock = pygame.time.Clock()
 grounds = []
 enemies = []
 items = []
+flats = []
 tile_size = 30
 map_width = 21
 map_height = 16
@@ -32,9 +34,9 @@ for index, thing in enumerate(settings.map):
     elif thing == 1:
         grounds.append(Ground(x, y, settings.flatgrass, 1.0))
     elif thing == 2:
-        grounds.append(Ground(x, y, settings.under1, 1.0))
+        flats.append(Flat(x, y, settings.under1))
     elif thing == 3:
-        grounds.append(Ground(x, y, settings.under2, 1.0))
+        flats.append(Flat(x, y, settings.under2))
     elif thing == 7:
         grounds.append(Ground(x, y, settings.fgrassleft, 1.0))
     elif thing == 8:
@@ -44,23 +46,23 @@ for index, thing in enumerate(settings.map):
     elif thing == 13:
         grounds.append(Ground(x, y, settings.swallright, 1.0))
     elif thing == 19:
-        decors.append(decor(x, y, settings.sign))
+        decors.append(decor(x, y, settings.sign,True,(x+15,y + 30)))
     elif thing == 20:
-        decors.append(decor(x,y,settings.crate))
+        decors.append(decor(x,y,settings.crate,True,(x+15,y + 30)))
     elif thing == 21:
-        decors.append(decor(x,y,settings.grass,False))
+        flats.append(Flat(x,y,settings.grass))
     elif thing == 22:
-        decors.append(decor(x,y,settings.daisy,False))
+        flats.append(Flat(x,y,settings.daisy))
     elif thing == 27:
-        decors.append(decor(x,y,settings.daisy2,False))
+        flats.append(Flat(x,y,settings.daisy2))
     elif thing == 28:
-        decors.append(decor(x,y,settings.orangeflower1,False))
+        flats.append(Flat(x,y,settings.orangeflower1))
     elif thing == 31:
-        decors.append(decor(x,y,settings.orangeflower2,False))
+        flats.append(Flat(x,y,settings.orangeflower2))
     elif thing == 26:
-        decors.append(decor(x,y,settings.rock1,False))
+        flats.append(Flat(x,y,settings.rock1))
     elif thing == 25:
-        decors.append(decor(x,y,settings.rock2,False))
+        flats.append(Flat(x,y,settings.rock2))
 
     elif thing == 14:
         player = Player(x,y)
@@ -91,6 +93,7 @@ for enemy in enemies:
 
 for item in items:
     item.set_ground(grounds)
+
 hitboxes = False
 
 while run:
@@ -98,6 +101,8 @@ while run:
     screen.fill((0, 0, 0))
     screen.blit(settings.sky, (0, 0))
     items = player.items
+    for flat in flats:
+        flat.draw(screen)
     for enemy in enemies:
         enemy.draw(screen)
         if hitboxes:

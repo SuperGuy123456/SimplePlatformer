@@ -17,6 +17,7 @@ class Item(pygame.sprite.Sprite):
         self.current_ground = None
         self.air_control_factor = 0.5  # Factor to reduce horizontal movement speed in the air
         self.type = Type
+        self.highlight = False
             
     def update(self):
         # Clamp horizontal speed
@@ -73,6 +74,9 @@ class Item(pygame.sprite.Sprite):
     def draw(self, surface):
         surface.blit(self.image, self.rect)
         self.update()
+        if self.highlight:
+            pygame.draw.rect(surface, (255, 255, 255), self.rect, 1)
+            self.highlight = False
 
     def set_ground(self, grounds):
         self.grounds = grounds
@@ -83,3 +87,6 @@ class Item(pygame.sprite.Sprite):
             print(player.inventory)
         else:
             print("inventory full")
+
+    def highlight_on(self):
+        self.highlight = True

@@ -145,9 +145,22 @@ class Player(pygame.sprite.Sprite):
                     self.inventory.heighlightindex = max(0, self.inventory.heighlightindex - 1)
                     break
 
+    def highlight(self):
+        for item in self.items:
+            if self.attack_rect.colliderect(item.rect):
+                item.highlight_on()
+        
+        for decor in self.decors:
+            if self.attack_rect.colliderect(decor.rect):
+                decor.highlight_on()
+
+        for enemy in self.enemies:
+            if self.attack_rect.colliderect(enemy.rect):
+                enemy.highlight_on()
 
 
     def update(self):
+        self.highlight()
         print(self.active_effect)
         self.health_rect = pygame.Rect(5, 0, self.health * 2, 25)
         keys = pygame.key.get_pressed()
@@ -158,7 +171,7 @@ class Player(pygame.sprite.Sprite):
             self.accx += self.speed if self.grounded else self.speed * self.air_control_factor
             self.direction = True
         if keys[pygame.K_UP] and self.grounded:
-            self.accy -= 15
+            self.accy -= 13
             self.grounded = False
         if keys[pygame.K_a]:
             self.attack()
