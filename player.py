@@ -82,8 +82,26 @@ class Player(pygame.sprite.Sprite):
 
     def use(self):
         if self.active_effect:
-            return  # Only one effect can be active at a time
+            blank = False
+            for i, (item, pos) in enumerate(self.inventory.blits):
+                if i == self.inventory.heighlightindex:
+                    if item.type == "coin":
+                        blank = True
 
+            if blank == False:
+                self.attackpow = self.base_attackpow
+                self.speed = self.base_speed
+                self.max_speed = self.base_max_speed
+                self.attack_cooldown = self.base_attack_cooldown
+                self.active_effect = None
+                self.effect_duration = 0
+                self.use_item()
+            else:
+                self.use_item()
+        else:
+            self.use_item()
+
+    def use_item(self):
         item_used = False
         for i, (item, pos) in enumerate(self.inventory.blits):
             if i == self.inventory.heighlightindex:

@@ -47,7 +47,7 @@ class decor(pygame.sprite.Sprite):
 
     def animate(self):
         now = time()
-        if now - self.lasttime > 0.2 and self.index < 3:
+        if now - self.lasttime > 0.1 and self.index < 3:
             self.lasttime = now
             self.index += 1
         if self.index == 3:
