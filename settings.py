@@ -99,13 +99,40 @@ sign.set_colorkey((255, 255, 255))
 sign = sign.subsurface(pygame.Rect(0, 0, 15, 15))
 sign = pygame.transform.scale(sign, (15 * 2, 15 * 2))
 
-#crate 15x15 20
+#crate 15x15 20 ------Animation object ---------
 
 crate = pygame.image.load('assets/decor.png')
 crate.set_colorkey((255, 255, 255))
 crate = crate.subsurface(pygame.Rect(15, 0, 15, 15))
 crate = pygame.transform.scale(crate, (15 * 2, 15 * 2))
 
+#cratef1 12x12
+
+cratef1 = pygame.image.load('assets/effects.png')
+cratef1.set_colorkey((255, 255, 255))
+cratef1 = cratef1.subsurface(pygame.Rect(0, 11, 12, 12))
+cratef1 = pygame.transform.scale(cratef1, (12 * 2, 12 * 2))
+
+#cratef2 14x12
+
+cratef2 = pygame.image.load('assets/effects.png')
+cratef2.set_colorkey((255, 255, 255))
+cratef2 = cratef2.subsurface(pygame.Rect(13, 11, 14, 12))
+cratef2 = pygame.transform.scale(cratef2, (14 * 2, 12 * 2))
+
+#cratef3 14x11
+
+cratef3 = pygame.image.load('assets/effects.png')
+cratef3.set_colorkey((255, 255, 255))
+cratef3 = cratef3.subsurface(pygame.Rect(29, 11, 14, 12))
+cratef3 = pygame.transform.scale(cratef3, (14 * 2, 12 * 2))
+
+#cratef4 15x12 44
+
+cratef4 = pygame.image.load('assets/effects.png')
+cratef4.set_colorkey((255, 255, 255))
+cratef4 = cratef4.subsurface(pygame.Rect(44, 11, 15, 12))
+cratef4 = pygame.transform.scale(cratef4, (15 * 2, 12 * 2))
 #little grass 15x15 21
 
 grass = pygame.image.load('assets/decor.png')

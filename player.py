@@ -70,6 +70,16 @@ class Player(pygame.sprite.Sprite):
                 items.append(item)
         self.items = items
 
+        decors = []
+        for decor in self.decors:
+            try:
+                if self.attack_rect.colliderect(decor.rect) and decor.image == settings.crate:
+                    decor.crate()
+                decors.append(decor)
+            except:
+                decors.append(decor)
+        self.decors = decors
+
     def use(self):
         if self.active_effect:
             return  # Only one effect can be active at a time
@@ -256,3 +266,6 @@ class Player(pygame.sprite.Sprite):
 
     def set_items(self, items):
         self.items = items
+
+    def set_decors(self, decors):
+        self.decors = decors

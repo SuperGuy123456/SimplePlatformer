@@ -83,6 +83,7 @@ for index, thing in enumerate(settings.map):
 player.set_enemies(enemies)
 player.set_ground(grounds)
 player.set_items(items)
+player.set_decors(decors)
 
 for enemy in enemies:
     enemy.set_player(player)
@@ -97,6 +98,7 @@ while run:
     screen.fill((0, 0, 0))
     screen.blit(settings.sky, (0, 0))
     items = player.items
+    decors = player.decors
     for enemy in enemies:
         enemy.draw(screen)
         if hitboxes:
