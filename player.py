@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.leftimage = pygame.transform.flip(self.image, True, False)
         self.index = 0
         self.images = [self.image, self.leftimage]
+        self.cimage = self.image
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -27,6 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.air_control_factor = 0.5  # Factor to reduce horizontal movement speed in the air
         self.max_speed = 5  # Maximum horizontal speed
         self.health = 100
+        self.jump = 13
         self.attackpow = 2
         self.attack_cooldown = 1
         self.lasttime = time()
@@ -40,9 +42,11 @@ class Player(pygame.sprite.Sprite):
         self.base_speed = 1
         self.base_max_speed = 5
         self.base_attack_cooldown = 1
+        self.base_jump = 13
         self.effect_start_time = 0
         self.coins = 0
         self.hud = HUD(self)
+        self.invisible = False
 
     def attack(self):
         if self.canattack:
@@ -61,6 +65,9 @@ class Player(pygame.sprite.Sprite):
         for enemy in self.enemies:
             if self.attack_rect.colliderect(enemy.rect):
                 enemy.health -= self.attackpow
+                self.cimage = self.images[self.index]
+                self.invisible = False
+                self.active_effect = None
                 
         items = []
         for item in self.items:
@@ -128,6 +135,31 @@ class Player(pygame.sprite.Sprite):
                     self.effect_start_time = time()
                     item_used = True
 
+                if item.type == "jump":
+                    self.jump += 2
+                    self.active_effect = "jump"
+                    self.effect_duration = 10
+                    self.effect_start_time = time()
+                    item_used = True
+                
+                if item.type == "invisible":
+                    self.invisible = True
+                    self.cimage = self.image.copy()
+                    self.cimage.set_alpha(128)
+                    self.active_effect = "invisible"
+                    self.effect_duration = 10
+                    self.effect_start_time = time()
+                    item_used = True
+
+                if item.type == "permanent speed":
+                    self.base_speed += 1
+                    self.base_max_speed += 2
+                    self.base_attack_cooldown -= 0.5
+                    self.speed = self.base_speed
+                    self.max_speed = self.base_max_speed
+                    self.attack_cooldown = self.base_attack_cooldown
+                    item_used = True
+
                 if item.type == "coin":
                     self.coins += 1
                     item_used = True
@@ -160,6 +192,10 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
+        if self.active_effect != "invisible":
+            self.invisible = False
+        if self.invisible != True:
+            self.cimage = self.images[self.index]
         self.highlight()
         self.health_rect = pygame.Rect(5, 0, self.health * 2, 25)
         keys = pygame.key.get_pressed()
@@ -170,7 +206,7 @@ class Player(pygame.sprite.Sprite):
             self.accx += self.speed if self.grounded else self.speed * self.air_control_factor
             self.direction = True
         if keys[pygame.K_UP] and self.grounded:
-            self.accy -= 13
+            self.accy -= self.jump
             self.grounded = False
         if keys[pygame.K_a]:
             self.attack()
@@ -200,9 +236,11 @@ class Player(pygame.sprite.Sprite):
         if self.direction:
             self.attack_rect.left = self.rect.left
             self.attack_rect.y = self.rect.topright[1]
+            self.index = 0
         else:
             self.attack_rect.right = self.rect.right
             self.attack_rect.y = self.rect.topleft[1]
+            self.index = 1
 
         # Apply gravity if not grounded
         if not self.grounded:
@@ -220,9 +258,10 @@ class Player(pygame.sprite.Sprite):
                 if self.accx > 0:
                     self.accx = 0
         for enemy in self.enemies:
-            if self.rect.colliderect(enemy):
+            if self.rect.colliderect(enemy) and not self.invisible:
                 if enemy.attack():
                     self.health -= enemy.attackpow
+                    
         if self.health <= 0:
             quit()
 
@@ -247,6 +286,20 @@ class Player(pygame.sprite.Sprite):
                 self.speed = self.base_speed
                 self.max_speed = self.base_max_speed
                 self.attack_cooldown = self.base_attack_cooldown
+
+        elif self.active_effect == "jump":
+            if time() - self.effect_start_time <= self.effect_duration:
+                pass
+            else:
+                self.active_effect = None
+                self.jump = self.base_jump
+        elif self.active_effect == "invisible":
+            if time() - self.effect_start_time <= self.effect_duration:
+                pass
+            else:
+                self.cimage = self.images[self.index]
+                self.invisible = False
+                self.active_effect = None
 
     def check_use(self, e):
         if e.type == pygame.KEYDOWN:
@@ -277,10 +330,10 @@ class Player(pygame.sprite.Sprite):
             self.current_ground = None
 
     def draw(self, surface):
-        if self.direction:
-            surface.blit(self.images[0], self.rect)
+        if self.invisible:
+            surface.blit(self.cimage, self.rect)
         else:
-            surface.blit(self.images[1], self.rect)
+            surface.blit(self.images[self.index], self.rect)
         pygame.draw.rect(surface, (255, 0, 0), self.health_rect)
         pygame.draw.rect(surface, (255, 255, 255), self.outline_rect, 5)
         self.inventory.draw(surface)

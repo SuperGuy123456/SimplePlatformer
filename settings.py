@@ -9,13 +9,14 @@ AUTHOR = "Manomay Tyagi"
 #testmap
 
 map = [
-0,0,0,0,0,32,33,34,16,0,0,0,0,0,0,0,0,0,0,0,0,
+
+0,0,0,6,10,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0,0,9,
-8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0,0,0,
+8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,
 13,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,9,
 13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,
 13,0,0,0,0,0,0,0,0,0,21,22,0,0,0,22,28,26,28,20,9,
@@ -103,6 +104,34 @@ strengthpotion = pygame.image.load('assets/items.png')
 strengthpotion.set_colorkey((255, 255, 255))
 strengthpotion = strengthpotion.subsurface(pygame.Rect(0, 15, 15, 15))
 strengthpotion = pygame.transform.scale(strengthpotion, (15 * 2, 15 * 2))
+
+#jumppotion 15x15
+
+jumppotion = pygame.image.load('assets/items.png') 
+jumppotion.set_colorkey((255, 255, 255))
+jumppotion = jumppotion.subsurface(pygame.Rect(15, 15, 15, 15))
+jumppotion = pygame.transform.scale(jumppotion, (15 * 2, 15 * 2))
+
+#invispotion 15x15
+
+invispotion = pygame.image.load('assets/items.png')
+invispotion.set_colorkey((255, 255, 255))
+invispotion = invispotion.subsurface(pygame.Rect(30, 15, 15, 15))
+invispotion = pygame.transform.scale(invispotion, (15 * 2, 15 * 2))
+
+#permstampotion 15x15
+
+permstampotion = pygame.image.load('assets/items.png')
+permstampotion.set_colorkey((255, 255, 255))
+permstampotion = permstampotion.subsurface(pygame.Rect(45, 0, 15, 15))
+permstampotion = pygame.transform.scale(permstampotion, (15 * 2, 15 * 2))
+
+#permjumppotion 15x15
+
+permjumppotion = pygame.image.load('assets/items.png')
+permjumppotion.set_colorkey((255, 255, 255))
+permjumppotion = permjumppotion.subsurface(pygame.Rect(45, 15, 15, 15))
+permjumppotion = pygame.transform.scale(permjumppotion, (15 * 2, 15 * 2))
 
 #confectionary items 
 

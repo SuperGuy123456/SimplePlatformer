@@ -82,6 +82,12 @@ for index, thing in enumerate(settings.map):
         items.append(Item(x,y,settings.healthpotion,"health"))
     elif thing == 16:
         items.append(Item(x,y,settings.strengthpotion,"strength"))
+    elif thing == 5:
+        items.append(Item(x,y,settings.jumppotion,"jump"))
+    elif thing == 6:
+        items.append(Item(x,y,settings.invispotion,"invisible"))
+    elif thing == 10:
+        items.append(Item(x,y,settings.permstampotion,"permanent speed"))
     
 
 
