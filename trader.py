@@ -1,9 +1,9 @@
 import pygame
 import settings
 from item import Item
+
 pygame.init()
 
-# The player class that is an image and a rectangle that inhibits platformer-style collision
 class Trader(pygame.sprite.Sprite):
     def __init__(self, x, y, type):
         super().__init__()
@@ -21,8 +21,8 @@ class Trader(pygame.sprite.Sprite):
         self.accy = 0
         self.grounded = False
         self.current_ground = None
-        self.air_control_factor = 0.5  # Factor to reduce horizontal movement speed in the air
-        self.max_speed = 5  # Maximum horizontal speed
+        self.air_control_factor = 0.5
+        self.max_speed = 5
         self.type = type
         self.potions = {"Strength Potion": "strength", "Speed Potion": "speed", "Health Potion": "health", "Jump Potion": "jump", "Invisibility Potion": "invisible"}
         self.images = [settings.stampotion,settings.strengthpotion,settings.healthpotion, settings.jumppotion,settings.invispotion]
@@ -37,7 +37,7 @@ class Trader(pygame.sprite.Sprite):
         self.salerects = []
         y = 0
         text = self.font.render("Shopping from the " + self.type, True, (255, 255, 255))
-        self.text.append((text, (360, y)))
+        self.text.append((text, pygame.Rect(360, y, text.get_width(), text.get_height())))
         y += 20
         for name, cost in self.sale.items():
             text = self.font.render(name + ": " + str(cost), True, (255, 255, 255))
@@ -45,7 +45,8 @@ class Trader(pygame.sprite.Sprite):
             rect.x = 360
             rect.y = y
             self.salerects.append(rect)
-            self.text.append((text, (360, y)))
+            camrect = pygame.Rect(360, y, text.get_width(), text.get_height())
+            self.text.append((text, camrect))
             y += 20
         self.shopping = False
 
@@ -82,27 +83,23 @@ class Trader(pygame.sprite.Sprite):
         else:
             self.drawinterrect = False
             self.shopping = False
-        # Clamp horizontal speed
+        
         if self.accx > self.max_speed:
             self.accx = self.max_speed
         elif self.accx < -self.max_speed:
             self.accx = -self.max_speed
 
-        # Update horizontal position
         self.rect.x += self.accx
         self.handle_horizontal_collisions()
 
-        # Update vertical position
         self.rect.y += self.accy
         self.handle_vertical_collisions()
         self.interrect.x = self.rect.x + 10
         self.interrect.y = self.rect.y - 10
 
-        # Apply gravity if not grounded
         if not self.grounded:
             self.accy += 0.8
 
-        # Apply friction from the current ground if grounded
         if self.grounded and self.current_ground:
             friction = self.current_ground.friction
             if self.accx > 0:
@@ -117,33 +114,33 @@ class Trader(pygame.sprite.Sprite):
     def handle_horizontal_collisions(self):
         for ground in self.grounds:
             if self.rect.colliderect(ground):
-                if self.accx > 0:  # Moving right
+                if self.accx > 0:
                     self.rect.right = ground.rect.left
-                elif self.accx < 0:  # Moving left
+                elif self.accx < 0:
                     self.rect.left = ground.rect.right
-                self.accx = 0  # Stop horizontal movement on collision
+                self.accx = 0
 
     def handle_vertical_collisions(self):
-        self.grounded = False  # Assume player is not grounded
+        self.grounded = False
         for ground in self.grounds:
             if self.rect.colliderect(ground):
-                if self.accy > 0:  # Falling
+                if self.accy > 0:
                     self.rect.bottom = ground.rect.top
                     self.grounded = True
                     self.current_ground = ground
-                elif self.accy < 0:  # Jumping
+                elif self.accy < 0:
                     self.rect.top = ground.rect.bottom
-                self.accy = 0  # Stop vertical movement on collision
+                self.accy = 0
         if not self.grounded:
             self.current_ground = None
 
-    def draw(self, surface):
-        surface.blit(self.image, self.rect)
+    def draw(self, surface, camera):
+        surface.blit(self.image, camera.apply_position(self.rect))
         if self.shopping:
             for text in self.text:
                 surface.blit(text[0], text[1])
         if self.drawinterrect:
-            surface.blit(self.inter, self.interrect)
+            surface.blit(self.inter, camera.apply_position(self.interrect))
         self.update()
 
     def set_ground(self, grounds):

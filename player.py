@@ -1,3 +1,5 @@
+# player.py
+
 import pygame
 import settings
 from inventory import Inventory
@@ -329,11 +331,11 @@ class Player(pygame.sprite.Sprite):
         if not self.grounded:
             self.current_ground = None
 
-    def draw(self, surface):
+    def draw(self, surface, camera):
         if self.invisible:
-            surface.blit(self.cimage, self.rect)
+            surface.blit(self.cimage, camera.apply_position(self.rect))
         else:
-            surface.blit(self.images[self.index], self.rect)
+            surface.blit(self.images[self.index], camera.apply_position(self.rect))
         pygame.draw.rect(surface, (255, 0, 0), self.health_rect)
         pygame.draw.rect(surface, (255, 255, 255), self.outline_rect, 5)
         self.inventory.draw(surface)

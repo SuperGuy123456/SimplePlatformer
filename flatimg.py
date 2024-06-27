@@ -1,13 +1,9 @@
-import pygame
-
-pygame.init()
-
-class Flat(pygame.sprite.Sprite):
-    def __init__(self,x,y,image):
-        super().__init__()
+class Flat:
+    def __init__(self, x, y, image):
         self.image = image
-        self.x = x
-        self.y = y
-    
-    def draw(self,screen):
-        screen.blit(self.image,(self.x,self.y))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def draw(self, screen, camera):
+        screen.blit(self.image, camera.apply_position(self.rect))

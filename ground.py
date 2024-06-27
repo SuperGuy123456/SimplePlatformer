@@ -1,8 +1,11 @@
+# ground.py
+
 import pygame
-pygame.init()
+import settings
+from camera import Camera
 
 class Ground(pygame.sprite.Sprite):
-    def __init__(self, x, y, image , friction):
+    def __init__(self, x, y, image, friction):
         super().__init__()
         self.image = image
         self.rect = self.image.get_rect()
@@ -10,6 +13,5 @@ class Ground(pygame.sprite.Sprite):
         self.rect.y = y
         self.friction = friction
 
-    def draw(self,screen):
-        
-        screen.blit(self.image, self.rect)
+    def draw(self, screen, camera):
+        screen.blit(self.image, camera.apply_position(self.rect))

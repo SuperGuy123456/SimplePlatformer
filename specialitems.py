@@ -31,16 +31,16 @@ class decor(pygame.sprite.Sprite):
             self.lasttime = time()
             self.done = False
 
-    def draw(self,screen):
+    def draw(self,screen,camera):
         if self.anistarted == False:
             if self.makerect:
-                screen.blit(self.image, self.rect)
+                screen.blit(self.image, camera.apply_position(self.rect))
             else:
                 screen.blit(self.image, (self.x,self.y))
         else:
-            screen.blit(self.frames[self.index], self.rect)
+            screen.blit(self.frames[self.index], camera.apply_position(self.rect))
         if self.highlight:
-            pygame.draw.rect(screen, (255, 255, 255), self.rect, 1)
+            pygame.draw.rect(screen, (255, 255, 255),camera.apply_position( self.rect), 1)
         self.highlight = False
         self.update()
 
@@ -76,13 +76,13 @@ class decor(pygame.sprite.Sprite):
             choices = ["coin","speed","health","strength"]
             item = choice(choices)
             if item == "coin":
-                player.items.append(Item(self.x, self.y, settings.coin, "coin"))
+                player.inventory.add_item(Item(self.x, self.y, settings.coin, "coin"))
             if item == "speed":
-                player.items.append(Item(self.x, self.y, settings.stampotion, "speed"))
+                player.inventory.add_item(Item(self.x, self.y, settings.stampotion, "speed"))
             if item == "health":
-                player.items.append(Item(self.x, self.y, settings.healthpotion, "health"))
+                player.inventory.add_item(Item(self.x, self.y, settings.healthpotion, "health"))
             if item == "strength":
-                player.items.append(Item(self.x, self.y, settings.strengthpotion, "strength"))
+                player.inventory.add_item(Item(self.x, self.y, settings.strengthpotion, "strength"))
 
             for item in player.items:
                 item.set_ground(player.grounds)
