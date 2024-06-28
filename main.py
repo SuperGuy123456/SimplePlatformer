@@ -9,6 +9,7 @@ from item import Item
 from flatimg import Flat
 from trader import Trader
 from camera import Camera
+from checkpoint import Checkpoint
 
 pygame.init()
 screen = pygame.display.set_mode((settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT))
@@ -21,15 +22,16 @@ enemies = []
 items = []
 flats = []
 traders = []
+checkpoints = []
 tile_size = 30
 current_map_index = 0
 maps = settings.maps  # Assuming you have a list of maps defined in settings
 
 decors = []
 player = Player(100, 100)  # Initial position of the player
-
+first_run = True
 def load_map(map_name, map_width):
-    global grounds, enemies, items, flats, traders, decors, player
+    global grounds, enemies, items, flats, traders, decors, player,checkpoints
     from specialitems import decor
     grounds.clear()
     enemies.clear()
@@ -37,6 +39,7 @@ def load_map(map_name, map_width):
     flats.clear()
     traders.clear()
     decors.clear()
+    checkpoints.clear()
 
     # Parse the map and create game objects accordingly
     for index, thing in enumerate(map_name):
@@ -77,7 +80,11 @@ def load_map(map_name, map_width):
         elif thing == 25:
             flats.append(Flat(x, y, settings.rock2))
         elif thing == 14:
-            player = Player(x, y)
+            if first_run == False:
+                player.rect.x = x
+                player.rect.y = y
+            else:
+                player = Player(x, y)
         elif thing == 15:
             enemies.append(Enemy(x, y, settings.enemy, 100, 1))
         elif thing == 4:
@@ -97,6 +104,8 @@ def load_map(map_name, map_width):
         elif thing == 10:
             items.append(Item(x, y, settings.permstampotion, "permanent speed"))
 
+        elif thing == 11:
+            checkpoints.append(Checkpoint(x,y))
     # Set up initial game state
     player.set_enemies(enemies)
     player.set_ground(grounds)
@@ -113,6 +122,9 @@ def load_map(map_name, map_width):
     for trader in traders:
         trader.set_ground(grounds)
         trader.set_player(player)
+
+    for checkpoint in checkpoints:
+        checkpoint.set_player(player)
 
 # Load the initial map
 print(current_map_index)
@@ -133,16 +145,28 @@ while run:
     
     player_tile_x = player.rect.x // tile_size
     if player_tile_x >= settings.width:
+        first_run = False
         print("win")
         current_map_index += 1
+        player.checkpoint = None
         print(current_map_index)
         if current_map_index < len(settings.maps):
             load_map(settings.maps[current_map_index],settings.width)
         else:
             print("You completed all levels!")
             break
-    if player.rect.y  >= 480:
-        load_map(settings.maps[current_map_index],settings.width)
+    if player.rect.y  >= 480 or player.dead:
+        first_run = False
+        if player.checkpoint != None:
+            player.rect.x = player.checkpoint.rect.x
+            player.rect.y = player.checkpoint.rect.y - 30
+        else:
+            load_map(settings.maps[current_map_index],settings.width)
+        
+        player.health = 100
+        player.dead = False
+    if player.dead:
+        print("You died!")
 
     # Draw game objects adjusted by camera position
     for flat in flats:
@@ -177,6 +201,12 @@ while run:
         trader.draw(screen, camera)
         if hitboxes:
             pygame.draw.rect(screen, (255, 255, 255), trader.rect, 1)
+
+    for checkpoint in checkpoints:
+        checkpoint.draw(screen, camera)
+        checkpoint.update()
+        if hitboxes:
+            pygame.draw.rect(screen, (255, 255, 255), checkpoint.rect, 1)
 
     player.draw(screen, camera)
 

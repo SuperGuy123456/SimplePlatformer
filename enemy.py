@@ -22,7 +22,7 @@ class Enemy(pygame.sprite.Sprite):
         self.air_control_factor = 0.5  # Factor to reduce horizontal movement speed in the air
         self.max_speed = 3  # Maximum horizontal speed
         self.health = 10
-        self.attackpow = 2
+        self.attackpow = 4
         self.canattack = True
         self.attack_cooldown = 2
         self.lasttime = 0

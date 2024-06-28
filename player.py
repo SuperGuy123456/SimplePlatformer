@@ -49,6 +49,8 @@ class Player(pygame.sprite.Sprite):
         self.coins = 0
         self.hud = HUD(self)
         self.invisible = False
+        self.checkpoint = None
+        self.dead = False
 
     def attack(self):
         if self.canattack:
@@ -265,7 +267,7 @@ class Player(pygame.sprite.Sprite):
                     self.health -= enemy.attackpow
                     
         if self.health <= 0:
-            quit()
+            self.dead = True
 
         if self.active_effect == "health":
             if time() - self.effect_start_time <= self.effect_duration:
