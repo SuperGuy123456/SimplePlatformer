@@ -1,5 +1,6 @@
 import pygame
 import settings
+import maps
 from random import choice
 from player import Player
 from ground import Ground
@@ -25,7 +26,7 @@ traders = []
 checkpoints = []
 tile_size = 30
 current_map_index = 0
-maps = settings.maps  # Assuming you have a list of maps defined in settings
+maps_ = maps.maps  # Assuming you have a list of maps defined in settings
 
 decors = []
 player = Player(100, 100)  # Initial position of the player
@@ -128,7 +129,7 @@ def load_map(map_name, map_width):
 
 # Load the initial map
 print(current_map_index)
-load_map(settings.maps[current_map_index],settings.width)
+load_map(maps.maps[current_map_index],settings.width)
 
 hitboxes = False
 
@@ -150,8 +151,8 @@ while run:
         current_map_index += 1
         player.checkpoint = None
         print(current_map_index)
-        if current_map_index < len(settings.maps):
-            load_map(settings.maps[current_map_index],settings.width)
+        if current_map_index < len(maps.maps):
+            load_map(maps.maps[current_map_index],settings.width)
         else:
             print("You completed all levels!")
             break
@@ -161,7 +162,7 @@ while run:
             player.rect.x = player.checkpoint.rect.x
             player.rect.y = player.checkpoint.rect.y - 30
         else:
-            load_map(settings.maps[current_map_index],settings.width)
+            load_map(maps.maps[current_map_index],settings.width)
         
         player.health = 100
         player.dead = False
