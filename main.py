@@ -142,7 +142,7 @@ while run:
             print("You completed all levels!")
             break
     if player.rect.y  >= 480:
-        quit()
+        load_map(settings.maps[current_map_index],settings.width)
 
     # Draw game objects adjusted by camera position
     for flat in flats:
