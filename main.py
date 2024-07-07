@@ -11,7 +11,7 @@ from flatimg import Flat
 from trader import Trader
 from camera import Camera
 from checkpoint import Checkpoint
-
+from ps4events import PS4
 pygame.init()
 screen = pygame.display.set_mode((settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT))
 
@@ -31,6 +31,7 @@ maps_ = maps.maps  # Assuming you have a list of maps defined in settings
 decors = []
 player = Player(100, 100)  # Initial position of the player
 first_run = True
+ps4 = PS4()
 def load_map(map_name, map_width):
     global grounds, enemies, items, flats, traders, decors, player,checkpoints
     from specialitems import decor
@@ -112,7 +113,6 @@ def load_map(map_name, map_width):
     player.set_ground(grounds)
     player.set_items(items)
     player.set_decors(decors)
-
     for enemy in enemies:
         enemy.set_player(player)
         enemy.set_ground(grounds)
@@ -134,7 +134,7 @@ load_map(maps.maps[current_map_index],settings.width)
 hitboxes = False
 
 camera = Camera(settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT, 49, 16)
-
+#player.set_controller(ps4)
 while run:
     clock.tick(settings.FPS)
     screen.fill((0, 0, 0))
@@ -210,6 +210,10 @@ while run:
             pygame.draw.rect(screen, (255, 255, 255), checkpoint.rect, 1)
 
     player.draw(screen, camera)
+    if player.usingcontroller == False:
+        player.keyboardinput()
+    else:
+        player.controllerinput()
 
     pygame.display.update()
 
@@ -224,6 +228,7 @@ while run:
                 hitboxes = not hitboxes
 
         player.check_use(event)
+        print(ps4.getkeys())
         for trader in traders:
             trader.checkforsale(event)
 

@@ -51,6 +51,7 @@ class Player(pygame.sprite.Sprite):
         self.invisible = False
         self.checkpoint = None
         self.dead = False
+        self.usingcontroller = False
 
     def attack(self):
         if self.canattack:
@@ -194,15 +195,9 @@ class Player(pygame.sprite.Sprite):
             if self.attack_rect.colliderect(enemy.rect):
                 enemy.highlight_on()
 
-
-    def update(self):
-        if self.active_effect != "invisible":
-            self.invisible = False
-        if self.invisible != True:
-            self.cimage = self.images[self.index]
-        self.highlight()
-        self.health_rect = pygame.Rect(5, 0, self.health * 2, 25)
+    def keyboardinput(self):
         keys = pygame.key.get_pressed()
+
         if keys[pygame.K_LEFT]:
             self.accx -= self.speed if self.grounded else self.speed * self.air_control_factor
             self.direction = False
@@ -224,6 +219,38 @@ class Player(pygame.sprite.Sprite):
             self.inventory.select(3)
         if keys[pygame.K_5]:
             self.inventory.select(4)
+
+    def controllerinput(self):
+        if self.con.getkeys() == "Dleft":
+            self.accx -= self.speed if self.grounded else self.speed * self.air_control_factor
+            self.direction = False
+        if self.con.getkeys() == "Dright":
+            self.accx += self.speed if self.grounded else self.speed * self.air_control_factor
+            self.direction = True
+        if self.con.getkeys() == "X" and self.grounded:
+            self.accy -= self.jump
+            self.grounded = False
+        if self.con.getkeys() == "Square":
+            self.attack()
+        '''if keys[pygame.K_1]:
+            self.inventory.select(0)
+        if keys[pygame.K_2]:
+            self.inventory.select(1)
+        if keys[pygame.K_3]:
+            self.inventory.select(2)
+        if keys[pygame.K_4]:
+            self.inventory.select(3)
+        if keys[pygame.K_5]:
+            self.inventory.select(4)'''
+
+    def update(self):
+        if self.active_effect != "invisible":
+            self.invisible = False
+        if self.invisible != True:
+            self.cimage = self.images[self.index]
+        self.highlight()
+        self.health_rect = pygame.Rect(5, 0, self.health * 2, 25)
+        
         # Clamp horizontal speed
         if self.accx > self.max_speed:
             self.accx = self.max_speed
@@ -343,6 +370,7 @@ class Player(pygame.sprite.Sprite):
         self.inventory.draw(surface)
         self.hud.draw(surface)
         self.update()
+    
 
     def set_ground(self, grounds):
         self.grounds = grounds
@@ -355,3 +383,7 @@ class Player(pygame.sprite.Sprite):
 
     def set_decors(self, decors):
         self.decors = decors
+
+    def set_controller(self,controller):
+        self.con = controller
+        self.usingcontroller = True
